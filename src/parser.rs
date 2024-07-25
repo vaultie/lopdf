@@ -139,8 +139,15 @@ fn stream<'a>(reader: &'a Reader) -> Parser<'a, u8, Stream> {
                     println!("Warning: invalid stream length {}", length);
                     return empty().map(move |_| Stream::new(dict.clone(), vec![]));
                 }
-                let stream = take(length as usize) - eol().opt() - seq(b"endstream").expect("endstream");
-                stream.map(move |data| Stream::new(dict.clone(), data.to_vec()))
+
+                let stream =
+                    empty().pos() + take(length as usize) - eol().opt() - seq(b"endstream").expect("endstream");
+
+                stream.map(move |(pos, data)| {
+                    let mut stream = Stream::with_position(dict.clone(), pos);
+                    stream.set_content(data.to_vec());
+                    stream
+                })
             } else {
                 empty().pos().map(move |pos| Stream::with_position(dict.clone(), pos))
             }
