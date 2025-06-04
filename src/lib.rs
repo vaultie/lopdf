@@ -27,7 +27,6 @@ pub use crate::toc::Toc;
 pub mod content;
 mod creator;
 mod encodings;
-pub mod encryption;
 mod error;
 pub use error::XrefError;
 pub mod filters;
@@ -43,7 +42,6 @@ mod processor;
 mod reader;
 #[cfg(any(feature = "pom_parser", feature = "nom_parser"))]
 pub use reader::Reader;
-mod rc4;
 mod writer;
 pub mod xobject;
 
